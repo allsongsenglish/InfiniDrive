@@ -32,14 +32,19 @@ def get_service():
 		else:
 			try:
 				flow = InstalledAppFlow.from_client_secrets_file(
-					'credentials.json', SCOPES)
+					'credentials.json', SCOPES, redirect_uri='urn:ietf:wg:oauth:2.0:oob')
 			except FileNotFoundError:
 				print("ERROR: 'credentials.json' not found. Please ensure the file exists in the correct location.")
 				sys.exit(1)
 			except Exception as e:
 				print(f"ERROR: Could not load credentials from 'credentials.json'. Error: {e}")
 				sys.exit(1)
-			creds = flow.run_local_server(port=1400, open_browser=False)
+			auth_url, _ = flow.authorization_url(prompt='consent') # Ensure prompt for consent
+			print(f"Please go to this URL to authorize InfiniDrive: {auth_url}")
+			print("After authorizing, Google will provide you with an authorization code.")
+			code = input("Enter the authorization code here: ")
+			flow.fetch_token(code=code)
+			creds = flow.credentials
 		# Save the credentials for the next run
 		with open('token.json', 'w') as token: # Changed token.pickle to token.json and mode to 'w' for text
 			token.write(creds.to_json()) # Changed pickle.dump to creds.to_json()
