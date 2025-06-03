@@ -39,7 +39,7 @@ def get_service():
 			except Exception as e:
 				print(f"ERROR: Could not load credentials from 'credentials.json'. Error: {e}")
 				sys.exit(1)
-			creds = flow.run_local_server(port=0, open_browser=False)
+			creds = flow.run_local_server(port=1400, open_browser=False)
 		# Save the credentials for the next run
 		with open('token.json', 'w') as token: # Changed token.pickle to token.json and mode to 'w' for text
 			token.write(creds.to_json()) # Changed pickle.dump to creds.to_json()
