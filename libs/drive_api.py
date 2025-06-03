@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import array, os, os.path, zipfile # Added os, removed pickle
+import sys
 
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload # Changed apiclient.http and combined imports
 from googleapiclient.discovery import build
@@ -29,12 +30,23 @@ def get_service():
 		if creds and creds.expired and creds.refresh_token:
 			creds.refresh(GoogleAuthRequest()) # Changed Request() to GoogleAuthRequest()
 		else:
-			flow = InstalledAppFlow.from_client_secrets_file(
-				'credentials.json', SCOPES)
+			try:
+				flow = InstalledAppFlow.from_client_secrets_file(
+					'credentials.json', SCOPES)
+			except FileNotFoundError:
+				print("ERROR: 'credentials.json' not found. Please ensure the file exists in the correct location.")
+				sys.exit(1)
+			except Exception as e:
+				print(f"ERROR: Could not load credentials from 'credentials.json'. Error: {e}")
+				sys.exit(1)
 			creds = flow.run_local_server(port=0, open_browser=False)
 		# Save the credentials for the next run
 		with open('token.json', 'w') as token: # Changed token.pickle to token.json and mode to 'w' for text
 			token.write(creds.to_json()) # Changed pickle.dump to creds.to_json()
+		print("\nINFO: 'token.json' has been created/updated with your authentication details.")
+		print("If you are running in a temporary environment like Google Colab,")
+		print("consider downloading this file or saving it to a persistent storage (like mounted Google Drive)")
+		print("to avoid re-authenticating in every new session.\n")
 
 	service = build('drive', 'v3', credentials=creds)
 	return service

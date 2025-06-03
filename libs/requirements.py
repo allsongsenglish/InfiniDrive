@@ -46,6 +46,8 @@ class requirements:
 			print('as well as online at https://github.com/DavidBerdik/InfiniDrive')
 			return False
 		elif not os.path.exists('token.json'): # Changed token.pickle to token.json
+			print('Please complete account authentication using the following URL.')
+			print('You can then run your previous command again.\n')
 			import libs.drive_api as drive_api
 			drive_api.get_service()
 			return False
