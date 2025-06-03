@@ -1,6 +1,26 @@
+import subprocess
+import os
+
+if 'COLAB_GPU' in os.environ:
+    print("Detected Colab environment. Installing dependencies...")
+    try:
+        process = subprocess.run(['pip', 'install', '-r', 'requirements.txt'], capture_output=True, text=True, check=True)
+        print("pip install stdout:")
+        print(process.stdout)
+        print("pip install stderr:")
+        print(process.stderr)
+        print("Dependencies installed successfully.")
+    except subprocess.CalledProcessError as e:
+        print("Error installing dependencies:")
+        print("Return code:", e.returncode)
+        print("stdout:", e.stdout)
+        print("stderr:", e.stderr)
+    except FileNotFoundError:
+        print("Error: requirements.txt not found. Make sure it's in the same directory as the script.")
+
 from libs.requirements import requirements
 
-import array, gc, libs.drive_api as drive_api, libs.hash_handler as hash_handler, libs.time_bomb as time_bomb, libs.upload_handler as upload_handler, math, os, requests, sys, threading
+import array, gc, libs.drive_api as drive_api, libs.hash_handler as hash_handler, libs.time_bomb as time_bomb, libs.upload_handler as upload_handler, math, requests, sys, threading
 
 from libs.bar import getpatchedprogress
 from libs.ftp_server import init_ftp_server

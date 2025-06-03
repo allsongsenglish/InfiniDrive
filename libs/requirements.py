@@ -45,7 +45,7 @@ class requirements:
 			print('Please do so and try again. Instructions for doing this are available in \'README.md\'')
 			print('as well as online at https://github.com/DavidBerdik/InfiniDrive')
 			return False
-		elif not os.path.exists('token.pickle'):
+		elif not os.path.exists('token.json'): # Changed token.pickle to token.json
 			print('Please complete account authentication using the following URL.')
 			print('You can then run your previous command again.\n')
 			import libs.drive_api as drive_api
